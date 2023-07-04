@@ -1,0 +1,36 @@
+body {
+    margin : 0px;
+    background: linear-gradient(rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.7)), url("background3.jpg");
+}
+
+.fullscreen {
+    width : 100vw;
+    height : 100vh;
+}
+
+.center {
+    border: 5px solid;
+    margin: auto;
+    width: 50%;
+    text-align: center;
+    padding: 10px;
+}
+
+.table-cell {
+    display : table-cell;
+    border: 3px solid red;
+    position: relative;
+    /*width : 200px;*/
+    height :200px;
+    align-self: center;
+    align-items: center;
+}
+
+.valign-middle {
+    vertical-align : middle;
+}
+
+.text-center {
+    text-align : center;
+}
