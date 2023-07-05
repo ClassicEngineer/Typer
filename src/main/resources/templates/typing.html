@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <title>Beautiful Code</title>
+    <link href="prism.css" rel="stylesheet" />
+  </head>
+  <body>
+    <header></header>
+    <main>
+    <pre class = "language-java" tabIndex = 0>
+        <code class = "language-java" id = "element">
+        
+        </code>
+    </pre>
+    </main>
+    <footer></footer>
+    
+    <script src="prism.js"></script>
+    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+
+      var code = /*[[${codePreparedToType}]]*/ 'default';
+      console.log(code);
+      var typed = new Typed('#element', {
+          strings: [code],
+          typeSpeed:20,
+          backSpeed: 10,
+      });
+      /*]]>*/
+    </script>
+  </body>
+</html>

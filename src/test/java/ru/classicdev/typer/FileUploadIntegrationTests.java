@@ -43,7 +43,7 @@ public class FileUploadIntegrationTests {
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 		assertThat(response.getHeaders().getLocation().toString())
 				.startsWith("http://localhost:" + this.port + "/load");
-		then(typerService).should().process(any(MultipartFile.class), any(String.class));
+		then(typerService).should().prepareToFormat(any(MultipartFile.class), any(String.class));
 	}
 
 }

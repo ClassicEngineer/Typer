@@ -1,4 +1,4 @@
-package ru.classicdev.typer.service;
+package ru.classicdev.typer.domain;
 
 public class CodeNotFoundException extends RuntimeException {
 

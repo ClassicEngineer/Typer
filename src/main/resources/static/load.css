@@ -1,7 +1,7 @@
 body {
     margin : 0px;
-    background: linear-gradient(rgba(0, 0, 0, 0.7),
-    rgba(0, 0, 0, 0.7)), url("background3.jpg");
+    background: linear-gradient(rgba(156, 142, 142, 0.7),
+    rgba(190, 182, 182, 0.7)), url("background3.jpg");
 }
 
 .fullscreen {

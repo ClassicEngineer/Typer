@@ -4,11 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.classicdev.typer.domain.Code;
+import ru.classicdev.typer.domain.CodeNotFoundException;
 import ru.classicdev.typer.domain.CodeRepository;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 @Service
 @RequiredArgsConstructor
@@ -16,40 +13,55 @@ public class TyperService {
 
 
     private final CodeRepository codeRepository;
+    private final CodePreparingService codePreparingService;
+
 
     /* extract file content
-     escape html things
-     apply code formatting
+      map lines
      save by sessionId
     */
-    public void process(MultipartFile file, String sessionId) {
-        String line;
-        StringBuilder result = new StringBuilder();
+    public void initProcess(MultipartFile file, String sessionId) {
+        Code code = Code.builder()
+                .id(sessionId)
+                .build();
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            line = br.readLine();
-            while (line != null) {
-                line = br.readLine();
-                result.append(processLine(line));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        Code code = new Code();
-        code.setId(sessionId);
-        code.setContent(result.toString());
+        code = codePreparingService.prepareFileToFormat(file, code);
 
         codeRepository.save(code);
     }
 
-    private String processLine(String codeLine) {
-        return null;
+
+    /**
+        @return code prepared to type in ome line
+     */
+    public String prepareToType(String formatted, String sessionId) {
+        Code code = getCodeBySessionId(sessionId);
+
+        code.setFormatted(formatted);
+
+        code = codePreparingService.prepareCodeToType(code);
+
+        codeRepository.save(code);
+
+        return code.getPreparedToType();
     }
 
-    public String getCodeBySessionId(String sessionId) {
-        Code code = codeRepository.findById(sessionId)
-                .orElseThrow(() -> new CodeNotFoundException("Not found code by sessionId"));
-        return code.getContent();
+    public Code getCodeBySessionId(String sessionId) {
+        return codeRepository.findById(sessionId)
+                .orElseThrow(() -> new CodeNotFoundException("Not found code by sessionId:" + sessionId));
+    }
+
+    public Code getCodeBySessionOrByFileId(String sessionId, Long fileId) {
+        return codeRepository.findById(sessionId)
+                .or(() -> codeRepository.findByFileId(fileId))
+                .orElseThrow(() -> new CodeNotFoundException("Not found code by sessionId: " + sessionId +" and fileId: " + fileId ));
+    }
+
+    public String getCodePreparedToFormat(String sessionId, Long fileId) {
+        return getCodeBySessionOrByFileId(sessionId, fileId).getPreparedToFormat();
+    }
+
+    public String getCodePreparedToType(String sessionId) {
+        return getCodeBySessionId(sessionId).getPreparedToType();
     }
 }

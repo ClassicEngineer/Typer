@@ -14,7 +14,7 @@ import ru.classicdev.typer.service.TyperService;
 @Log
 @Controller
 @RequiredArgsConstructor
-public class LoadFileController {
+public class TyperController {
 
     private final TyperService typerService;
 
@@ -26,19 +26,34 @@ public class LoadFileController {
     @PostMapping(value = "/load", consumes = "multipart/form-data")
     public String load(@RequestParam("file") MultipartFile file, HttpSession session) {
         log.info("File was uploaded!");
-        typerService.process(file, session.getId());
-        return "redirect:load";
+        typerService.initProcess(file, session.getId());
+        return "redirect:coding";
     }
 
+//@PathVariable(value = "file_id", required = false) Long fileId,
     @GetMapping("/coding")
     public String codingPage(Model model, HttpSession session) {
-        model.addAttribute("code", typerService.getCodeBySessionId(session.getId()));
+        model.addAttribute("code", typerService.getCodePreparedToFormat(session.getId(), null));
         return "coding";
     }
 
+    @PostMapping(value = "/type", consumes = "application/json")
+    public String type(@RequestBody FormattedCodeRequest request, Model model, HttpSession session) {
+        log.info("Formatted Code Request was sent!");
+        typerService.prepareToType(request.getFormattedCode(), session.getId());
+        return "typing";
+    }
+
+    @GetMapping("/typing")
+    public String typingPage(Model model, HttpSession session) {
+        model.addAttribute("codePreparedToType", typerService.getCodePreparedToType(session.getId()));
+        return "typing";
+    }
 
     @EventListener({ContextRefreshedEvent.class})
     public void logHrefOnStartup() {
         log.info("Go at http://localhost:8080/load");
     }
+
+
 }
