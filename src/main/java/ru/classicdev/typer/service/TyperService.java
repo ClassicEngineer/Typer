@@ -32,9 +32,9 @@ public class TyperService {
 
 
     /**
-        @return code prepared to type in ome line
+        @return code prepared to type in one line
      */
-    public String prepareToType(String formatted, String sessionId) {
+    public void prepareToType(String formatted, String sessionId) {
         Code code = getCodeBySessionId(sessionId);
 
         code.setFormatted(formatted);
@@ -43,7 +43,6 @@ public class TyperService {
 
         codeRepository.save(code);
 
-        return code.getPreparedToType();
     }
 
     public Code getCodeBySessionId(String sessionId) {

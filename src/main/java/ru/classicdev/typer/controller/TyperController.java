@@ -46,7 +46,8 @@ public class TyperController {
 
     @GetMapping("/typing")
     public String typingPage(Model model, HttpSession session) {
-        model.addAttribute("codePreparedToType", typerService.getCodePreparedToType(session.getId()));
+        String code = typerService.getCodePreparedToType(session.getId());
+        model.addAttribute("codePreparedToType", code);
         return "typing";
     }
 

@@ -7,17 +7,20 @@
 	<pre class = language-java><code class="language-java" th:text="${code}">code</code></pre>
 	<script src="prism.js"></script>
 	<script>
-		var content = document.querySelector('code').outerHTML;
-		fetch('http://localhost:8080/type', {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ "formattedCode": content })
-		})
+		function sendContent() {
+			var content = document.querySelector('code').outerHTML;
+			fetch('http://localhost:8080/type', {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ "formattedCode": content })
+			})
+		}
+
 	</script>
-	<a href="http://localhost:8080/typing"><button>Press me and see result! </button></a>
+	<a href="http://localhost:8080/typing"><button onclick="sendContent()" id="result">Press me and see result! </button></a>
 
 </body>
 </html>

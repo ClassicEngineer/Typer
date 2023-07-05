@@ -29,23 +29,27 @@ public class CodePreparingService {
 
     public Code prepareCodeToType(Code code) {
         StringBuilder result = new StringBuilder();
-        result.append("'");
-        String[] lines = code.getFormatted().split("\n");
+//        result.append("'");
+        String formatted = code.getFormatted();
+        formatted = formatted.replaceAll("<code class=\"language-java\">", "");
+        formatted = formatted.replaceAll("</code>", "");
+        code.setFormatted(formatted);
+        String[] lines = formatted.split("\n");
         for (String line : lines)
             if (!line.isBlank()) {
                 line = insertNewLineIfNeeded(line);
                 result.append(line);
             } else {
-                result.append(line).append( "\\n");
+                result.append(line).append( "\n");
             }
-        result.append("'");
+//        result.append("'");
         code.setPreparedToType(result.toString());
         return code;
     }
 
     private static String insertNewLineIfNeeded(String line) {
         int bracesStart = line.lastIndexOf("{");
-        String newLine = "\\n";
+        String newLine = "\n";
         if (bracesStart != -1) {
             return insertStringToStringAfterPos(line, bracesStart, newLine);
         }
